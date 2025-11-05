@@ -1,10 +1,11 @@
-export default async function handler(request, response) {
+// Use module.exports instead of 'export default'
+module.exports = async (request, response) => {
   // 1. Check for POST method
   if (request.method !== 'POST') {
     return response.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  console.log("Waitlist function (Node.js) started.");
+  console.log("Waitlist function (Node.js/CommonJS) started.");
   const SHEETDB_URL = process.env.SHEETDB_API_URL;
   
   if (SHEETDB_URL) {
@@ -19,7 +20,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    // 3. Get the body (Vercel Node.js runtime provides it at `request.body`)
+    // 3. Get the body
     const body = request.body;
     
     if (!body || !body.email) {
@@ -51,17 +52,14 @@ export default async function handler(request, response) {
     // 5. Handle the response from SheetDB
     if (sheetDBResponse.ok) {
       console.log("Submission successful.");
-      // Send a 200 (OK) response back to your React app
       return response.status(200).json({ message: 'Success!' });
     } else {
       const errorData = await sheetDBResponse.json();
       console.error("SheetDB submission failed:", errorData);
-      // Send the error from SheetDB back to your React app
       return response.status(sheetDBResponse.status).json(errorData);
     }
   } catch (error) {
     console.error("Error in serverless function catch block:", error.message);
-    // Send a 500 (Server Error) response back to your React app
     return response.status(500).json({ message: error.message || 'Something went wrong.' });
   }
-}
+};
