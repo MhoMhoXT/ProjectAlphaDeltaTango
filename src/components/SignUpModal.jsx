@@ -91,7 +91,6 @@ export default function SignUpModal({ isOpen, onClose }) {
                     onError={() => console.log('Login Failed')}
                     theme="outline"
                     size="large"
-                    width="100%"
                 />
 
                 <div className="my-6 flex items-center gap-x-4">

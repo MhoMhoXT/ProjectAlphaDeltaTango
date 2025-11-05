@@ -43,14 +43,6 @@ function App() {
         <Roadmap />
         <Footer />
       </Suspense>
-
-      {/* The Image Preview Modal */}
-      <ImagePreviewModal
-        isOpen={isDashboardPreviewOpen}
-        onClose={() => setIsDashboardPreviewOpen(false)}
-        imageUrl="public\images\dashboard-preview.webp" // Path to your image in the public folder
-        imageAlt="AI Ad Compliance Tester Dashboard UI Preview"
-      />
     </>
   );
 }
