@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { FaTwitter, FaLinkedin } from 'react-icons/fa'; // Assuming you want social icons, can be removed
-
-// REMOVED: const SHEETDB_URL = import.meta.env.VITE_SHEETDB_API_URL;
 
 export default function Footer() {
     const [email, setEmail] = useState('');
