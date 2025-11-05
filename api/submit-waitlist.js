@@ -1,11 +1,12 @@
-// Use module.exports instead of 'export default'
-module.exports = async (request, response) => {
+// api/submit-waitlist.js
+// Use 'export default' because package.json has "type": "module"
+export default async function handler(request, response) {
   // 1. Check for POST method
   if (request.method !== 'POST') {
     return response.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  console.log("Waitlist function (Node.js/CommonJS) started.");
+  console.log("Waitlist function (ESM) started.");
   const SHEETDB_URL = process.env.SHEETDB_API_URL;
   
   if (SHEETDB_URL) {
@@ -62,4 +63,4 @@ module.exports = async (request, response) => {
     console.error("Error in serverless function catch block:", error.message);
     return response.status(500).json({ message: error.message || 'Something went wrong.' });
   }
-};
+}
