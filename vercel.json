@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "mhomhoxt/projectalphadeltatango/ProjectAlphaDeltaTango-868153326010ae069022a921f0251e83f059e1d9/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "mhomhoxt/projectalphadeltatango/ProjectAlphaDeltaTango-868153326010ae069022a921f0251e83f059e1d9/dist"
+      }
+    },
+    {
+      "src": "mhomhoxt/projectalphadeltatango/ProjectAlphaDeltaTango-868153326010ae069022a921f0251e83f059e1d9/api/submit-waitlist.mjs",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/submit-waitlist",
+      "dest": "/mhomhoxt/projectalphadeltatango/ProjectAlphaDeltaTango-868153326010ae069022a921f0251e83f059e1d9/api/submit-waitlist.mjs"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/mhomhoxt/projectalphadeltatango/ProjectAlphaDeltaTango-868153326010ae069022a921f0251e83f059e1d9/dist/$1"
+    }
+  ]
+}
