@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DarkVeil from '../background/DarkVeil';
 import BubbleMenu from './BubbleMenu';
 import SignUpModal from './SignUpModal';
-import useTally from '../hooks/useTally';
+
 
 
 
