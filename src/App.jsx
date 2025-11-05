@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from 'react'
 import './App.css'
 import Hero from './components/Hero';
-import ImagePreviewModal from './components/ImagePreviewModal';
+
 
 const Problem = React.lazy(() => import('./components/Problem'));
 const Solution = React.lazy(() => import('./components/Solution'));
