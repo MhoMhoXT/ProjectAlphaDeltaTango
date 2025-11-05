@@ -36,12 +36,12 @@ export default function SignUpModal({ isOpen, onClose }) {
                     <span>
                         You’re on the list! We’ll invite you to the private beta soon. Want to help shape the tool?{' '}
                         <a 
-                            href="https://tally.so/r/w87GXP" // Your Tally form URL
+                            href= {import.meta.env.VITE_TALLY_FORM_ID} // Your Tally form URL
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="font-bold text-emerald-400 underline hover:text-emerald-300"
                         >
-                            Click here to share.
+                            Click here to share feedback with us.
                         </a>
                     </span>
                 );
