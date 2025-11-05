@@ -1,11 +1,10 @@
-export default async function handler(request) {
-  // 1. Only allow POST requests
+export default async function handler(request, response) {
+  // 1. Check for POST method
   if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return response.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  // --- START DEBUGGING ---
-  console.log("Waitlist function started.");
+  console.log("Waitlist function (Node.js) started.");
   const SHEETDB_URL = process.env.SHEETDB_API_URL;
   
   if (SHEETDB_URL) {
@@ -13,31 +12,33 @@ export default async function handler(request) {
   } else {
     console.error("SHEETDB_API_URL variable is UNDEFINED. Check Vercel settings.");
   }
-  // --- END DEBUGGING ---
 
-
+  // 2. Check if the environment variable is loaded
   if (!SHEETDB_URL) {
-    return new Response(
-      JSON.stringify({ message: 'Server configuration error.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return response.status(500).json({ message: 'Server configuration error.' });
   }
 
   try {
-    // 3. Get the email and platform data from the React component
-    const body = await request.json();
+    // 3. Get the body (Vercel Node.js runtime provides it at `request.body`)
+    const body = request.body;
+    
+    if (!body || !body.email) {
+        console.error("No email found in request body.");
+        return response.status(400).json({ message: 'Email is required.' });
+    }
+
     const { email, platforms } = body;
 
     const dataToSubmit = {
       timestamp: new Date().toISOString(),
       email: email,
-      ...(platforms && { platforms: platforms }), // Conditionally add platforms
+      ...(platforms && { platforms: platforms }),
     };
     
-    console.log("Attempting to submit to SheetDB..."); // New log
+    console.log("Attempting to submit to SheetDB:", dataToSubmit);
 
     // 4. Securely send the data to SheetDB from the server
-    const response = await fetch(SHEETDB_URL, {
+    const sheetDBResponse = await fetch(SHEETDB_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -45,29 +46,22 @@ export default async function handler(request) {
       }),
     });
 
-    console.log("SheetDB response status:", response.status); // New log
+    console.log("SheetDB response status:", sheetDBResponse.status);
 
-    if (response.ok) {
-      // 5. Send a success response back to your React component
-      console.log("Submission successful."); // New log
-      return new Response(JSON.stringify({ message: 'Success!' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // 5. Handle the response from SheetDB
+    if (sheetDBResponse.ok) {
+      console.log("Submission successful.");
+      // Send a 200 (OK) response back to your React app
+      return response.status(200).json({ message: 'Success!' });
     } else {
-      // 6. Forward the error if SheetDB fails
-      const errorData = await response.json();
-      console.error("SheetDB submission failed:", errorData); // New log
-      return new Response(JSON.stringify(errorData), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const errorData = await sheetDBResponse.json();
+      console.error("SheetDB submission failed:", errorData);
+      // Send the error from SheetDB back to your React app
+      return response.status(sheetDBResponse.status).json(errorData);
     }
   } catch (error) {
-    console.error("Error in serverless function catch block:", error.message); // New log
-    return new Response(
-      JSON.stringify({ message: error.message || 'Something went wrong.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error("Error in serverless function catch block:", error.message);
+    // Send a 500 (Server Error) response back to your React app
+    return response.status(500).json({ message: error.message || 'Something went wrong.' });
   }
 }
