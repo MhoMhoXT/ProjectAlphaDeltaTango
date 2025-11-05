@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FaTwitter, FaLinkedin } from 'react-icons/fa'; // Assuming you want social icons, can be removed
 
-// Your SheetDB API endpoint from the prerequisites step
-const SHEETDB_URL = import.meta.env.VITE_SHEETDB_API_URL;
+// REMOVED: const SHEETDB_URL = import.meta.env.VITE_SHEETDB_API_URL;
 
 export default function Footer() {
     const [email, setEmail] = useState('');
@@ -15,16 +14,14 @@ export default function Footer() {
         setMessage('');
 
         try {
-            const response = await fetch(SHEETDB_URL, {
+            // --- MODIFICATION: Fetch from your new serverless function ---
+            const response = await fetch('/api/submit-waitlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    data: [{
-                        timestamp: new Date().toISOString(),
-                        email: email,
-                    }],
-                }),
+                body: JSON.stringify({ email: email }), // Send just the email
             });
+            // --- END MODIFICATION ---
+
             if (response.ok) {
                 setMessage("Success! You're on the list.");
                 setEmail(''); // Clear the input on success

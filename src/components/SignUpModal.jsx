@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 
-const SHEETDB_URL = import.meta.env.VITE_SHEETDB_API_URL; 
+// REMOVED: const SHEETDB_URL = import.meta.env.VITE_SHEETDB_API_URL; 
 
 const adPlatforms = ['Facebook', 'Google', 'TikTok', 'Other'];
 
@@ -22,16 +22,14 @@ export default function SignUpModal({ isOpen, onClose }) {
         setIsSubmitting(true);
         setMessage('');
         try {
-            const response = await fetch(SHEETDB_URL, {
+            // --- MODIFICATION: Fetch from your new serverless function ---
+            const response = await fetch('/api/submit-waitlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    data: [{
-                        timestamp: new Date().toISOString(),
-                        ...data,
-                    }],
-                }),
+                body: JSON.stringify(data), // Send the data directly
             });
+            // --- END MODIFICATION ---
+
             if (response.ok) {
                 // --- CRITICAL FIX: The success message is now correctly set to the state ---
                 setMessage(

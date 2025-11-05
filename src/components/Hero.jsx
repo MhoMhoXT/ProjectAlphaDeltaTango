@@ -38,26 +38,34 @@ const menuItems = [
 
 const Hero = () => {
     const [isModalOpen, setIsModalOpen] = useState(false); // 3. Add state for modal
-    const { openTally } = useTally();
+    // REMOVED: const { openTally } = useTally();
 
+    // --- MODIFICATION: Call window.Tally directly ---
     const handleFeedbackClick = () => {
-      // Pass your Tally Form ID here
-      openTally(import.meta.env.VITE_TALLY_FORM_ID, {
-        emoji: {
-          text: '👋',
-          animation: 'wave',
-        },
-      });
+      if (window.Tally) {
+        window.Tally.openPopup(import.meta.env.VITE_TALLY_FORM_ID, {
+          emoji: {
+            text: '👋',
+            animation: 'wave',
+          },
+        });
+      } else {
+        console.error("Tally script not loaded yet.");
+      }
     };
 
+    // --- MODIFICATION: Call window.Tally directly ---
     const handleFeedbackClick2 = () => {
-      // Pass your Tally Form ID here
-      openTally(import.meta.env.VITE_TALLY_FORM_ID_2, {
-        emoji: {
-          text: '👋',
-          animation: 'wave',
-        },
-      });
+      if (window.Tally) {
+        window.Tally.openPopup(import.meta.env.VITE_TALLY_FORM_ID_2, {
+          emoji: {
+            text: '👋',
+            animation: 'wave',
+          },
+        });
+      } else {
+        console.error("Tally script not loaded yet.");
+      }
     };
 
     return (
